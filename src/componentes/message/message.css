@@ -11,3 +11,15 @@
 	align-items:center;
 	justify-content:center;
 }
+
+span {
+	text-align:center;
+	margin-top:8px;
+	color:red;
+}
+
+@media all and (max-width:780px){
+.message {
+overflow-y:auto;
+}
+}

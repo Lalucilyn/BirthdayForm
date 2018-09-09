@@ -14,7 +14,7 @@ const Table = (props) => {
         	</thead>
         	<tbody>
         		{
-        			props.records.map((key, value) => <tr id={key.id} key={key.id} onClick={props.retrieve}><td>{key.name}</td><td>{key.country}</td><td>{key.birthday}</td></tr>)
+        			props.records.map((key, value) => <tr id={key.id} key={key.id} onClick={props.retrieve}><td>{key.name} {key.surname}</td><td>{key.country}</td><td>{key.birthday}</td></tr>)
         		}
         	</tbody>
 

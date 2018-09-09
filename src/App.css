@@ -1,78 +1,81 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
 * {
-	box-sizing:border-box;	
-	font-family: 'Open Sans', sans-serif;
+box-sizing:border-box;	
+font-family: 'Open Sans', sans-serif;
 }
 
 html {
-	min-height:100%;
+min-height:100%;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  display: flex;
-  flex-direction:column;
-  background: #FC5C7D;  
-  background: -webkit-linear-gradient(to right, #6A82FB, #FC5C7D);
-  background: linear-gradient(to right, #6A82FB, #FC5C7D); 
-
-
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction:column;
+background: #FC5C7D;  
+background: -webkit-linear-gradient(to right, #6A82FB, #FC5C7D);
+background: linear-gradient(to right, #6A82FB, #FC5C7D); 
 }
 
 .App {
-	margin:16px;
+margin:16px;
 }
 
 h1 {
-	color:#4a0072;
-	background:white;
-	text-transform:uppercase;
+color:#4a0072;
+background:white;
+text-transform:uppercase;
 letter-spacing:1px;
-	padding:1%;
-	  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-}
-@import url('https://fonts.googleapis.com/css?family=Open+Sans');
-.main-container {
-	display:grid;
-	grid-template-columns:1fr 1fr;
-	grid-column-gap:8px;
+padding:1%;
+box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
+.main-container {
+display:grid;
+grid-template-columns:1fr 1fr;
+grid-column-gap:8px;
+}
+
+.empty {
+	text-align:center;
+	margin-top:8px;
+	color:#b5004d;
+}
 
 
 footer {
- align-self:flex-end;
- text-align:right;
+align-self:flex-end;
+text-align:right;
 }
+
 
 @media all and (max-width:1300px){
 .form-container .field {
-	grid-template-columns:1fr 3fr;
+grid-template-columns:1fr 3fr;
 }
 
-.form-container, .results-container {
-	height:420px;
+.results-container {
+height:420px;
 }
 }
 
 @media all and (max-width:780px){
-	h1 {
-		text-align:center;
-		font-size:1.5em;
-	}
-	.main-container {
-	grid-template-columns:1fr;
-	grid-row-gap:16px;
-	height:auto;
+h1 {
+text-align:center;
+font-size:1.5em;
+}
+.main-container {
+grid-template-columns:1fr;
+grid-row-gap:16px;
+height:auto;
 }
 
-.form-container, .results-container {
-	height:400px;
-}
+
 
 .message {
-	overflow-y:auto;
+overflow-y:auto;
 }
 }
 

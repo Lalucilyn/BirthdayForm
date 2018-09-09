@@ -41,11 +41,14 @@ table th:not(:first-child),
 table td:not(:first-child) { 
   border-left: 1px solid rgba(0, 0, 0, 0.075);
 }
-/*
-table tr:nth-child(odd) td{
-  background:#a9b8e9;
+@media all and (max-width:1300px){
+	.results-container {
+		height:420px;
+	}
 }
 
-table tr:nth-child(even) td{
-	background:#dce2f6
-}*/
+@media all and (max-width:780px){
+	.results-container{
+		height:400px;
+	}
+}	
