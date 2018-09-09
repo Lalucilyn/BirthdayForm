@@ -4,7 +4,11 @@ import './message.css';
 
 const Message = (props) => {
     return (<div className="message">
-        		<p>Hello {props.name} from {props.country} on {props.date} you will have {props.age} years</p>
+        		{props.last ? 
+        			<p>Hello {props.name} from {props.country} on {props.day} of {props.month} you will have {props.age} years</p>
+        		:
+        		<p>Hello! Please complete the form</p>
+        		}
       		</div>);
   	}
 

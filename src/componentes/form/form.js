@@ -2,28 +2,41 @@ import React, { Component } from 'react';
 import './form.css';
 import Message from '../message/message'
 import Table from '../table/table'
+import FormError from '../error/error'
 //BUGS: 
 //CHEQUEAR QUE NO SIGA PASANDO ESO DE QUE QUEDEN CAMPOS VACÍOS. NO DEBERÍA
 //PONER LAS HELPER FUNCTIONS EN MÓDULO APARTE
 //ORDENAR
 //ACHICAR EL STATE
-//LA FECHA DEL MENSAJE AHORA ESTÁ HARCODEADA, PONELA BIEN
 //REALMENTE CHEQUEÁ LA FUNCIÓN CUMPLEAÑOS
+
 class Form extends Component {
  state = {
- 	records:JSON.parse(localStorage.getItem('savedRecords')) || {'name':'savedRecords', 'records':[]},
+ 	records:[],
  	countries:"",
- 	error:"",
+ 	error:false,
  	"name":"",
  	"surname":"",
- 	"country":"",
+ 	"country":"Select your country",
  	"birthday":"",
- 	"submitted":"",
- 	"last":{}
+ 	"last":""
  };
 
- //Retrieves the countries for the select field
+ getErrors = () => {
+  if(this.state.name===""||this.state.surname===""||this.state.country==="Select your country"){
+    return true;
+  }else{
+    return false;
+  }
+ }
+
  componentDidMount() {
+    //Get saved records from LocalStorage, if any
+    let records = JSON.parse(localStorage.getItem('savedRecords'))
+    console.log(records)
+    records!==null && this.setState({records:records.records});
+    
+    //Get countries data from API
     fetch("https://restcountries.eu/rest/v2/all")
     .then((response) => {
       return response.json()	
@@ -36,102 +49,145 @@ class Form extends Component {
     })
     .catch(function(error){
       this.setState({error:true})
-     })
-  }	
+    })
+  }
 
+  //Saves typed data to state
   handleUserInput = (event) => {
   	  const name = event.target.name;
       const value = event.target.value;
       this.setState({[name]: value})
-      console.log(this.state)
   }
-
+  
+  //Creates new record for list and also sets last record in state so the message can be displayed
   handleUserSubmit = (event) => {
   	event.preventDefault();
-  	event.target.reset()
-  	let records = this.state.records.records;
-  	let currentRecord = {
+  	if(this.getErrors()){
+       this.setState({error:true})
+      return;
+    }
+    event.target.reset()
+
+  	let records = this.state.records;  	
+    let currentRecord = {
   		id:records.length,
   		name:this.state.name,
   		surname:this.state.surname,
   		country:this.state.country,
-  		birthday:this.state.birthday
+  		birthday:this.state.birthday,
+      day:parseInt(this.state.birthday.slice(8,10),10),
+      month:this.getBirthdayMonth(this.state.birthday.slice(5,7))
   	}
+
   	records.push(currentRecord);
   	let objectRecord = {
   		"name":"savedData",
   		"records":records
   	}
-  	let recordJSON = JSON.stringify(objectRecord)
-  	console.log(recordJSON)
-  	localStorage.setItem('savedRecords', recordJSON);
 
-    let age = this.getUserAge(this.state.birthday)
-  	this.setState({
-  		records:objectRecord,
- 		error:"",
+  	let recordJSON = JSON.stringify(objectRecord)
+  	localStorage.setItem('savedRecords', recordJSON);
+    
+    let age = this.getUserAge(this.state.birthday);
+    this.setState({
+  	records:objectRecord.records,
+ 		error:false,
  		"name":"",
  		"surname":"",
  		"country":"",
  		"birthday":"",
- 		"last": {"name":currentRecord.name, "country":currentRecord.country, age:age},
- 		submitted:true
+ 		"last": {"name":currentRecord.name, 
+             "country":currentRecord.country, 
+             "birthday":currentRecord.birthDay, 
+             "age":age, 
+             "day":currentRecord.day, 
+             "month":currentRecord.month
+            },
   	});
+  }
+  
+  //Get current date and returns day as DD, month as MM and year as YYYY
+  getCurrentDate = () => {
+    const today = new Date();
+    let day = today.getDate();
+    let month = today.getMonth() + 1; 
+    let year = today.getFullYear();
+    day<10 && (day='0'+ day)
+    month<10 && (month ='0'+month)
+    return {day:day, month:month, year:year}
+  }
+
+  //Get month's name
+  getBirthdayMonth = (month) => {
+  let monthString;
+  switch(month){
+    case "01":monthString="January";break;
+    case "02":monthString="February";break;
+    case "03":monthString="March"; break;
+    case "04":monthString="April"; break;
+    case "05":monthString="May"; break;
+    case "06":monthString="June"; break;
+    case "07":monthString="July"; break;
+    case "08":monthString="August"; break;
+    case "09":monthString="September"; break; 
+    case "10":monthString="October"; break;
+    case "11":monthString="November"; break;
+    case "12":monthString="December"
+  }
+  return monthString;
   }
 
   //Pass today as max atribute in the birthday field
-  getCurrentDate = () => {
-	const today = new Date();
-	let day = today.getDate();
-	let month = today.getMonth() + 1; 
-	let year = today.getFullYear();
-	day<10 && (day='0'+ day)
-	month<10 && (month ='0'+month)
-	const currentDate = year+'-'+month+'-'+day;
-    return currentDate;
+  setMaxDate = () => {
+    const currentDate = this.getCurrentDate();
+    const maxDate = currentDate.year+'-'+ currentDate.month+'-'+ currentDate.day;
+    return maxDate;
   }
 
   //Get user's age on their next birthday
   getUserAge = (birthday) => {
+    const currentDate = this.getCurrentDate()
   	//Get day, month and year from user's birthday
   	const birthYear = birthday.slice(0,4);
   	const birthMonth = birthday.slice(5,7);
   	const birthDate = birthday.slice(8,10);
-
-  	//Get day, month and year from current date
-  	const currentDate = new Date()
-  	const currentYear = currentDate.getFullYear();
-  	let currentMonth = currentDate.getMonth() + 1;
-  	currentMonth<10 && (currentMonth = '0'+ currentMonth);
-  	let currentDay = currentDate.getDate()
-    currentDay<10 && (currentDay= '0'+ currentDay);
-    let futureAge;
   	
-  	//Compare
-  	if(currentMonth>birthMonth){
+    let futureAge;
+   	//Compare
+    switch(true){
+      case currentDate.month>birthMonth:
+      case currentDate.month===birthMonth && currentDate.day>birthDate:
+      futureAge = (currentDate.year - birthYear) + 1;
+      break;
+      case currentDate.month===birthMonth && currentDate.day===birthDate:
+      futureAge = (currentDate.year - birthYear); console.log("happy birthday")
+      break;
+      default: futureAge = currentDate.year - birthYear;
+     }
+    /* 
+  	if(currentDate.month>birthMonth){
   		console.log("entré en el 1°")
-  		futureAge = (currentYear - birthYear) + 1
-    }else if(currentMonth === birthMonth && currentDay === birthDate){
+  		futureAge = (currentDate.year - birthYear) + 1
+      console.log(currentDate.year)
+    }else if(currentDate.month === birthMonth && currentDate.day === birthDate){
     	console.log("happy Birthday")
-    	futureAge = currentYear - birthYear
-    }else if(currentMonth === birthMonth && currentDate<birthDate){
+    	futureAge = currentDate.year - birthYear
+    }else if(currentDate.month === birthMonth && currentDate.day<birthDate){
     	console.log("entre en el 3°")   
-    	futureAge = currentYear - birthYear
+    	futureAge = currentDate.year - birthYear + 1;
     }else{
     	console.log("entré en el 4")
-    	futureAge = currentYear - birthYear
-    }
+    	futureAge = currentDate.year - birthYear
+    }*/
     return futureAge
   }
 
   getOldUser = (e) => {
-  	let key = e.target.parentNode.id //BUT WHY
-  	let records = this.state.records.records
-
-  	let myRecord = records.find((record) => {return record.id==key})
+  	let key = parseInt(e.target.parentNode.id, 10) //BUT WHY
+  	let records = this.state.records
+  	let myRecord = records.find(record => record.id===key)
   	let myAge = this.getUserAge(myRecord.birthday)
-  	this.setState({"last": {"name":myRecord.name, "country":myRecord.country, age:myAge}, "submitted":true})
-    console.log(this.state)
+  	this.setState({"last": {"name":myRecord.name, "country":myRecord.country, age:myAge, month:myRecord.month, day:myRecord.day}})
   }
 
    render() {
@@ -145,8 +201,7 @@ class Form extends Component {
        			   name="name"
        			   value={this.state.name}
        			   onChange={this.handleUserInput}	
-               placeholder="enter your name"
-       			   required/>
+               placeholder="enter your name"/>
         </div>
         <div className="field">
         	<label htmlFor="surname">Surname</label>
@@ -154,37 +209,36 @@ class Form extends Component {
                placeholder="Enter your surname"
         		   name="surname"
         		   value={this.state.surname}
-        		   onChange={this.handleUserInput}		
-        		   required/>
+        		   onChange={this.handleUserInput}/>
         </div>
         <div className="field">
         	<label htmlFor="country">Country</label>
         	<select 
                 name="country"
                 onChange={this.handleUserInput}
-                value={this.state.country}
-                required>
+                value={this.state.country}>
         		<option>Select your country</option>
         		{this.state.countries && this.state.countries.map((name, index)=>{
         	    	return <option key={name}>{name}</option>
         	    })}
         	</select>
+          
         </div>
         <div className="field">
         	<label htmlFor="birthday">Birthday</label>
         	<input type="date" 
                    name="birthday"
                    value={this.state.birthday}
-                   max={this.getCurrentDate()}
-                   onChange={this.handleUserInput} 
-        	       required/>
+                   max={this.setMaxDate()}
+                   onChange={this.handleUserInput}/>
         </div>	
         <button>Save</button>
+        {this.state.error && <FormError/>}
       	</form>
-      	{this.state.submitted && <Message name={this.state.last.name} country={this.state.last.country} date="10 of september" age={this.state.last.age}/>}
+      	<Message name={this.state.last.name} country={this.state.last.country} day={this.state.last.day} month={this.state.last.month} age={this.state.last.age} last={this.state.last!==""}/>
       	</div>
       	<div className="results-container">
-         	<Table records={this.state.records.records} retrieve={this.getOldUser}/>
+         	{this.state.records.length>0 && <Table records={this.state.records} retrieve={this.getOldUser}/>}
       	</div>
       </div>
     );

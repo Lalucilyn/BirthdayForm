@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Form from './componentes/form/form';
 import Table from './componentes/table/table';
+import Message from './componentes/message/message';
+import Error from './componentes/error/error';
 import './App.css';
 
 class App extends Component {
