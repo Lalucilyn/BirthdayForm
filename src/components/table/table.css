@@ -1,10 +1,8 @@
-
-
 .results-container {
-    height:400px;
+  height:400px;
 	overflow-y:scroll;
 	background:white;
-		  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 table {
@@ -14,15 +12,14 @@ table {
 	border-collapse:collapse;
 }
 
-
 th {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.075);
 	width:33%;
-    height:50px;
-    background:#b5004d;
-    font-size:1.3em;
-    font-weight:normal;
-    color:white;
+  height:50px;
+  background:#b5004d;
+  font-size:1.3em;
+  font-weight:normal;
+  color:white;
 }
 
 td {
@@ -34,13 +31,14 @@ td {
 tbody tr:hover {
 	background:#e3f2fd;
 	transition:0.3s;
-    cursor:pointer;
+  cursor:pointer;
 }
 
 table th:not(:first-child),
 table td:not(:first-child) { 
   border-left: 1px solid rgba(0, 0, 0, 0.075);
 }
+
 @media all and (max-width:1300px){
 	.results-container {
 		height:420px;

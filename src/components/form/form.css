@@ -1,24 +1,21 @@
 .form-container {
-display:flex;
-flex-direction:column;
-height:400px;
-background:white;
-box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-
+	display:flex;
+	flex-direction:column;
+	height:400px;
+	background:white;
+	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 form {
 	width:85%;
 	margin:0 auto;
-
 }
 
 .field {
 	margin:16px;
 	display:grid;
 	grid-template-columns: 2fr 7fr;
-
-		border-bottom:3px solid #7b1fa2;
+	border-bottom:3px solid #7b1fa2;
 }
 
 .field label {
@@ -28,7 +25,6 @@ form {
 .field input, .field select {
 	height:35px;
 	border:none;
-
 	width:100%;
 }
 
@@ -54,13 +50,14 @@ button:hover {
 	transition:0.4s;
 	cursor:pointer;
 }
+
 @media all and (max-width:1300px){
 	.form-container {
 		height:420px;
 	}	
 	.field {
-			grid-template-columns:1fr 3fr;
-		}
+		grid-template-columns:1fr 3fr;
+	}
 }
 
 @media all and (max-width:780px){

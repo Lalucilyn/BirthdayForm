@@ -9,9 +9,9 @@ const Form = (props) =>  {
           <label htmlFor="name">Name</label>
           <input 
             type="text" 
-               name="name"
-               maxlength="15"
-               value={props.name}
+               name="firstname"
+               maxLength="20"
+               value={props.firstname}
                onChange={props.change}  
                placeholder="enter your name"/>
         </div>
@@ -20,7 +20,7 @@ const Form = (props) =>  {
           <input type="text" 
                placeholder="Enter your surname"
                name="surname"
-               maxlength="15"
+               maxLength="20"
                value={props.surname}
                onChange={props.change}/>
         </div>
