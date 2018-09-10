@@ -1,4 +1,4 @@
-This project was made as a test from Intive - FDV
+This project was made as a test for Intive - FDV
 
 A couple of notes about some choices I made during this project:
 
